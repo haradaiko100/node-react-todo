@@ -1,0 +1,87 @@
+version: '3'
+services:
+  db:
+    # 起動するイメージを指定
+    image: mysql:latest
+
+    container_name: node-db-container
+
+    # 環境変数を設定
+    environment:
+      - MYSQL_ROOT_HOST=${DB_ROOT_HOST}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
+
+    # ホスト側のポート:コンテナのポート
+    ports:
+      - '3306:3306'
+
+    # ボリュームバインド
+    volumes:
+      - ./db/conf:/etc/mysql/conf.d/:ro
+      - mysqldata:/var/lib/mysql
+      - ./db/logs:/var/log/mysql
+
+    #使用するネットワーク
+    networks:
+      - backend
+
+  server:
+    image: node:12-alpine
+    container_name: node-js-container
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_DATABASE=${DB_NAME}
+      - TZ=${TZ}
+      - CHOKIDAR_USEPOLLING=true
+
+    #コンテナを起動させ続けるよう設定
+    tty: true
+
+    ports:
+      - '3001:3001'
+
+    # ソースコードを格納するフォルダをマウント
+    #（ホスト側の./serverをコンテナの/appにマウント）
+    volumes:
+      - ./server:/app
+
+    # 起動時のカレントフォルダを指定
+    working_dir: /app/server
+
+    # 起動後に実行するコマンドを指定
+    command: npm run dev
+
+    networks:
+      - backend
+
+    #依存関係（serverコンテナより先にdbコンテナが起動するように設定）
+    depends_on:
+      - db
+
+  client:
+    image: node:12-alpine
+    container_name: client_container
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client:/app
+    working_dir: /app/client
+    command: npm run start
+    networks:
+      - backend
+    depends_on:
+      - server
+
+networks:
+  backend:
+
+
+volumes:
+  mysqldata:
