@@ -1,0 +1,25 @@
+
+
+{
+  "development": {
+    "username": "root",
+    "password": "pass",
+    "database": "todo",
+    "host": "node-db-container",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "username",
+    "password": "pass",
+    "database": "todo",
+    "host": "db",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "username",
+    "password": "pass",
+    "database": "todo",
+    "host": "db",
+    "dialect": "mysql"
+  }
+}
