@@ -1,0 +1,102 @@
+import axios from "../setting"
+import { useState, ChangeEvent } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
+
+
+type Todo = {
+    id: number,
+    name: string,
+    done: boolean,
+    createdAt: Date,
+    updatedAt: Date,
+}
+
+type Post = {
+    name: string,
+    done: boolean
+}
+
+
+const EditTodo = () => {
+
+    //const [todo_list, setTodo_List] = useState<Todo[]>([]);
+    const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state as Todo;
+
+    const [text, setText] = useState<string>(state.name)
+    const [done, setDone] = useState<boolean>(state.done)
+
+    const changeDoneStatus = () => {
+        setDone(!done)
+    }
+
+    const handleChangeText = (e: ChangeEvent<HTMLInputElement>) => {
+        setText(e.target.value)
+        //console.log(text)
+    }
+
+
+    const deleteItem = () => {
+        //console.log(id)
+        axios.delete(`/${state.id}`).then(() => {
+            //console.log("successfully deleted!!")
+            navigate('/')
+        })
+            .catch(e => {
+                console.log("error :", e)
+            })
+    }
+
+    const handleUpdate = () => {
+
+        const new_post: Post = {
+            "name": text,
+            "done": done
+        }
+        axios.put(`/${state.id}`, new_post).then(() => {
+            //console.log("successfully updated done status!!")
+            navigate('/')
+        })
+            .catch(e => {
+                console.log("error:", e)
+            })
+    }
+
+
+    return (
+        <div className="flex flex-col flex-wrap content-center py-60">
+            <div className="flex flex-row items-center shadow appearance-none border w-2/3 text-xl">
+                <p className="font-bold  text-slate-500 w-20">
+                    {state.id}
+                </p>
+                <input
+                    className="shadow-lg appearance-none border rounded w-2/5"
+                    type="text"
+                    defaultValue={state.name}
+                    onChange={e => handleChangeText(e)}
+                />
+                <button
+                    className=" shadow-lg font-bold
+                py-2 px-4 rounded-3xl bg-green-50 hover:bg-green-100 mx-5"
+                    onClick={changeDoneStatus}>
+                    {done ? '完' : '未'}
+                </button>
+                <button
+                    className="shadow-lg font-bold
+                py-2 px-4 rounded-3xl bg-orange-50 hover:bg-orange-100 mx-5"
+                    onClick={handleUpdate}>
+                    update
+                </button>
+                <button
+                    className="shadow-lg font-bold
+                py-2 px-4 rounded-3xl bg-blue-50 hover:bg-blue-100 mx-5"
+                    onClick={deleteItem}>
+                    delete
+                </button>
+            </div>
+        </div>
+    );
+};
+
+export default EditTodo

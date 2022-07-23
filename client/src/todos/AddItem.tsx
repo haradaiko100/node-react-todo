@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from "../setting"
 
+
 type Post = {
     name: string,
     done: boolean
@@ -23,7 +24,7 @@ const AddItem = () => {
         axios.post("/post", post_data)
             .then(res => {
                 //setTodo_List([res,...todo_list])
-                console.log(res)
+                //console.log(res)
             })
             .catch(e => {
                 console.log("error:", e)
@@ -40,15 +41,20 @@ const AddItem = () => {
     }
 
     return (
-        <div>
-            <h1>Add Item</h1>
-            <form onSubmit={e => handleSubmit(e)}>
+        <div className=' flex flex-col space-y-5 items-center'>
+            <h1 className=' font-bold text-4xl'>Add Item</h1>
+            <form
+            className='flex flex-row space-x-10 ' 
+            onSubmit={e => handleSubmit(e)}>
                 <input
+                    className=' shadow appearance-none border rounded pl-2 '
                     type="text"
                     value={text}
                     onChange={e => handleChange(e)}
                 />
                 <input
+                    className=' bg-blue-500 hover:bg-blue-700 text-white font-bold
+                     py-2 px-4 rounded-full'
                     type="submit"
                     value="追加"
                 />

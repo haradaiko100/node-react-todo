@@ -1,6 +1,7 @@
 import axios from "../setting"
-import { useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import AddItem from "./AddItem"
+import { useNavigate } from "react-router-dom"
 
 
 type Todo = {
@@ -10,12 +11,6 @@ type Todo = {
   createdAt: Date,
   updatedAt: Date,
 }
-
-type Post = {
-  name: string,
-  done: boolean
-}
-
 
 const Todolist = () => {
 
@@ -32,47 +27,23 @@ const Todolist = () => {
       })
   }, [todo_list])
 
-
-  const changeDoneStatus = (each_todo:Todo) => {
-
-    const new_post :Post = {
-      "name":each_todo.name,
-      "done":!each_todo.done
-    }
-    axios.put(`/${each_todo.id}`,new_post).then(() => {
-      console.log("successfully updated done status!!")
-    })
-    .catch(e => {
-      console.log("error:",e)
-    })
-  }
-
-
-  const deleteItem = (id:number) => {
-    //console.log(id)
-    axios.delete(`/${id}`).then(() => {
-      console.log("successfully deleted!!")
-    })
-    .catch(e => {
-      console.log("error :",e)
-    })
-  }
+  const navigate = useNavigate();
 
   return (
-    <div>
+    <div className="flex flex-col flex-wrap space-y-5  content-center">
       <AddItem />
-      <div>
+      <div className=" flex flex-col w-3/5 py-2 -mb-4 ">
         {todo_list.map(each_todo => (
-          <div key={each_todo.id}>
-            <p>{each_todo.name}</p>
-            <p>{each_todo.done}</p>
-            <p>{each_todo.id}</p>
-            <button onClick={() => changeDoneStatus(each_todo)}>
+          <div className="flex flex-row items-center  shadow appearance-none border py-2
+             text-xl"
+            key={each_todo.id}
+            onClick={() => navigate(`/${each_todo.id}`, { state: each_todo })}>
+            <p className="font-bold px-2 text-slate-500 w-20">{each_todo.id}</p>
+            <p className="w-80">{each_todo.name}</p>
+              <button className="shadow bg-green-50 font-bold
+            py-2 px-4 rounded-3xl">
                 {each_todo.done ? '完' : '未'}
-            </button>
-            <span onClick={() => deleteItem(each_todo.id)} style={{ cursor: 'pointer' }}>
-                delete
-            </span>
+              </button>
           </div>
         ))}
       </div>
