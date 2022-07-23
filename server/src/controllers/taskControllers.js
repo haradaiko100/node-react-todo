@@ -20,7 +20,7 @@ async function create_todo (req, res, next){
     try {
         const result = await db.Task.create({
             name: req.body.name,
-            done: false
+            done: req.body.done,
         });
         res.send(result);
     } catch (err) {

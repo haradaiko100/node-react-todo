@@ -8,11 +8,12 @@ services:
 
     # 環境変数を設定
     environment:
-      - MYSQL_ROOT_HOST=${DB_ROOT_HOST}
-      - MYSQL_DATABASE=${DB_NAME}
-      - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - TZ=${TZ}
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=todo
+      - MYSQL_USER=username
+      - MYSQL_PASSWORD=pass
+      - MYSQL_ROOT_PASSWORD=pass
+      - TZ=Asia/Tokyo
 
     # ホスト側のポート:コンテナのポート
     ports:
@@ -30,13 +31,15 @@ services:
 
   server:
     image: node:12-alpine
-    container_name: node-js-container
+    
     environment:
       - MYSQL_SERVER=db
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - TZ=${TZ}
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=todo
+      - TZ=Asia/Tokyo
       - CHOKIDAR_USEPOLLING=true
+
+    container_name: node-js-container
 
     #コンテナを起動させ続けるよう設定
     tty: true
@@ -62,22 +65,22 @@ services:
     depends_on:
       - db
 
-  client:
-    image: node:12-alpine
-    container_name: client_container
-    environment:
-      - CHOKIDAR_USEPOLLING=true
-    tty: true
-    ports:
-      - '3000:3000'
-    volumes:
-      - ./client:/app
-    working_dir: /app/client
-    command: npm run start
-    networks:
-      - backend
-    depends_on:
-      - server
+  #client:
+  #  image: node:12-alpine
+  #  container_name: client_container
+  #  environment:
+  #    - CHOKIDAR_USEPOLLING=true
+  #  tty: true
+  #  ports:
+  #    - '3000:3000'
+  #  volumes:
+  #    - ./client:/app
+  #  working_dir: /app/client
+  #  command: npm run start
+  #  networks:
+  #    - backend
+  #  depends_on:
+  #    - server
 
 networks:
   backend:

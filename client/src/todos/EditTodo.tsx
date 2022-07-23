@@ -67,7 +67,7 @@ const EditTodo = () => {
     return (
         <div className="flex flex-col flex-wrap content-center py-60">
             <div className="flex flex-row items-center shadow appearance-none border w-2/3 text-xl">
-                <p className="font-bold  text-slate-500 w-20">
+                <p className="font-bold  text-slate-500 w-20 mx-1">
                     {state.id}
                 </p>
                 <input
