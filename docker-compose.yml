@@ -53,7 +53,7 @@ services:
       - ./server:/app
 
     # 起動時のカレントフォルダを指定
-    working_dir: /app/server
+    working_dir: /app/
 
     # 起動後に実行するコマンドを指定
     command: npm run dev
