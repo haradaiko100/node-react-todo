@@ -1,10 +1,5 @@
-#### node-react-todo
+# React + Node.js + MySQL + Tailwind でTodoアプリ
 
-***
-
-## React + Node.js + MySQL + Tailwind でTodoアプリ
-
-***
 ### How to start this app
 
 ***
